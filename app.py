@@ -44,7 +44,10 @@ def get_screen_name(userid):
 
 
 def main(hashtag, count, filter_empty=False):
+    print "Hashtag: {}, count {}, filter empty retweets: {}".format(hashtag, count, filter_empty)
+    print "Fetching tweets..."
     tweets = get_tweets(hashtag, count)
+    print "Fetching retweeters..."
     retweeters = [get_retweeters(id) for id in [get_id(tweet) for tweet in tweets]]
     mapping = [(tweets[i].AsDict()['user']['id'], retweeters[i]) for i in range(len(tweets))]
     res = []
@@ -58,12 +61,13 @@ def main(hashtag, count, filter_empty=False):
             res.append({'tweeter': tweeter, 'retweeter': ''})
         else:
             res += [{'tweeter': tweeter, 'retweeter': retweeter} for retweeter in retweeters]
-
+    print "Creating a CSV..."
     df = pd.DataFrame.from_records(res)
     df = df[['tweeter', 'retweeter']]
     if filter_empty:
         df = df[df['retweeter'] != '']
     df.to_csv('results.csv', index=False)
+    print "DONE :-)"
 
 
 if __name__ == '__main__':
