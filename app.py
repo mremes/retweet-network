@@ -43,8 +43,11 @@ def get_screen_name(userid):
     return api.GetUser(user_id=userid).AsDict()['screen_name']
 
 
-def main(hashtag, count, filter_empty=False):
-    print "Hashtag: {}, count {}, filter empty retweets: {}".format(hashtag, count, filter_empty)
+def main(hashtag, count, separator, filter_empty=False):
+    print "Hashtag: {}, count: {}, separator: {}, filter empty retweets: {}".format(hashtag,
+                                                                                    count,
+                                                                                    separator,
+                                                                                    filter_empty)
     print "Fetching tweets..."
     tweets = get_tweets(hashtag, count)
     print "Fetching retweeters..."
@@ -66,16 +69,16 @@ def main(hashtag, count, filter_empty=False):
     df = df[['tweeter', 'retweeter']]
     if filter_empty:
         df = df[df['retweeter'] != '']
-    df.to_csv('results.csv', index=False)
+    df.to_csv('results.csv', index=False, sep=separator)
     print "DONE :-)"
 
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        hashtag, count, filter_empty = open('args.txt').readline().split(' ')
-    elif len(sys.argv) != 4:
-        print "USAGE: python app.py <hashtag> <# of tweets> <filter results w/o retweets (True or False)>"
+        hashtag, count, separator, filter_empty = open('args.txt').readline().split(' ')
+    elif len(sys.argv) != 5:
+        print "USAGE: python app.py <hashtag> <# of tweets> <separator> <filter results w/o retweets (True or False)>"
         sys.exit(1)
     else:
-        hashtag, count, filter_empty = sys.argv[1], sys.argv[2], bool(sys.argv[3])
-    main(hashtag, count, filter_empty)
+        hashtag, count, separator, filter_empty = sys.argv[1], sys.argv[2], bool(sys.argv[3]), sys.argv[4]
+    main(hashtag, count, separator, filter_empty)

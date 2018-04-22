@@ -1,1 +1,1 @@
-valinnanvapaus 10 True
+valinnanvapaus 10 ; True
