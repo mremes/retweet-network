@@ -8,24 +8,32 @@ vars = [(i[0], i[1].replace('\n', '')) for i in [var.split('=') for var in open(
 api = twitter.Api(**dict(vars))
 
 
+def handle_ratelimit(e):
+    print "Rate limit hit!"
+    mins = 15
+    for m in range(mins):
+        print "Sleeping for {} more minutes...".format(mins)
+        time.sleep(60)
+        mins -= 1
+
+
 def ratelimiter(fn):
     def fndec(*args):
         try:
             return fn(*args)
         except TwitterError as e:
-            if 'Rate limit' in e.message:
-                mins = 15
-                for m in range(mins):
-                    t = m+1
-                    time.sleep(60*t)
-                    print "Sleeping for {} more minutes...".format(mins-t)
+            handle_ratelimit(e)
         return fn(*args)
     return fndec
 
 
 @ratelimiter
 def get_tweets(hashtag, count):
-    return api.GetSearch(raw_query='q=%23{}&count={}&result_type=mixed'.format(hashtag, count))
+    try:
+        return api.GetSearch(raw_query='q=%23{}&count={}&result_type=mixed'.format(hashtag, count))
+    except TwitterError as e:
+        handle_ratelimit(e)
+        return api.GetRetweeters(status_id=id)
 
 
 @ratelimiter
@@ -35,12 +43,20 @@ def get_id(tweet):
 
 @ratelimiter
 def get_retweeters(id):
-    return api.GetRetweeters(status_id=id)
+    try:
+        return api.GetRetweeters(status_id=id)
+    except TwitterError as e:
+        handle_ratelimit(e)
+        return api.GetRetweeters(status_id=id)
 
 
 @ratelimiter
 def get_screen_name(userid):
-    return api.GetUser(user_id=userid).AsDict()['screen_name']
+    try:
+        return api.GetUser(user_id=userid).AsDict()['screen_name']
+    except TwitterError as e:
+        handle_ratelimit(e)
+        return api.GetRetweeters(status_id=id)
 
 
 def main(hashtag, count, separator, filter_empty=False):
