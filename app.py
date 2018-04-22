@@ -2,9 +2,9 @@ import time
 import pandas as pd
 import twitter
 from twitter import TwitterError
+import sys
 
 vars = [(i[0], i[1].replace('\n', '')) for i in [var.split('=') for var in open('envvars.txt').readlines()]]
-print vars
 api = twitter.Api(**dict(vars))
 
 
@@ -14,8 +14,12 @@ def ratelimiter(fn):
             return fn(*args)
         except TwitterError as e:
             if 'Rate limit' in e.message:
-                time.sleep(60*15)
-            return fn(*args)
+                mins = 15
+                for m in range(mins):
+                    t = m+1
+                    time.sleep(60*t)
+                    print "Sleeping for {} more minutes...".format(mins-t)
+        return fn(*args)
     return fndec
 
 
@@ -39,7 +43,7 @@ def get_screen_name(userid):
     return api.GetUser(user_id=userid).AsDict()['screen_name']
 
 
-def main(hashtag, count):
+def main(hashtag, count, filter_empty=False):
     tweets = get_tweets(hashtag, count)
     retweeters = [get_retweeters(id) for id in [get_id(tweet) for tweet in tweets]]
     mapping = [(tweets[i].AsDict()['user']['id'], retweeters[i]) for i in range(len(tweets))]
@@ -57,9 +61,13 @@ def main(hashtag, count):
 
     df = pd.DataFrame.from_records(res)
     df = df[['tweeter', 'retweeter']]
+    if filter_empty:
+        df = df[df['retweeter'] != '']
     df.to_csv('results.csv', index=False)
 
 
 if __name__ == '__main__':
-    import sys
-    main(sys.argv[1], sys.argv[2])
+    if len(sys.argv) != 4:
+        print "USAGE: python app.py <hashtag> <# of tweets> <filter results w/o retweets (True or False)>"
+        sys.exit(1)
+    main(sys.argv[1], sys.argv[2], bool(sys.argv[3]))
