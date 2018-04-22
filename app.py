@@ -67,7 +67,11 @@ def main(hashtag, count, filter_empty=False):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
+    if len(sys.argv) == 1:
+        hashtag, count, filter_empty = open('args.txt').readline().split(' ')
+    elif len(sys.argv) != 4:
         print "USAGE: python app.py <hashtag> <# of tweets> <filter results w/o retweets (True or False)>"
         sys.exit(1)
-    main(sys.argv[1], sys.argv[2], bool(sys.argv[3]))
+    else:
+        hashtag, count, filter_empty = sys.argv[1], sys.argv[2], bool(sys.argv[3])
+    main(hashtag, count, filter_empty)

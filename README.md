@@ -8,3 +8,5 @@ tweeter,retweeter
 user1,user2
 ...
 ```
+
+Thou can also put arguments into `args.txt` file (for Windows user convenience)
