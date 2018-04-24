@@ -50,7 +50,7 @@ def rate_limiter(fn):
 
 @rate_limiter
 def fetch_tweets(hashtag, count, lang, max_id):
-    query = 'q=%23{}&count={}&lang={}&result_type=mixed'.format(hashtag, count, lang)
+    query = 'q=%23{}&count={}&lang={}&result_type=recent'.format(hashtag, count, lang)
     if max_id:
         query += '&max_id={}'.format(max_id)
     time.sleep(5)
