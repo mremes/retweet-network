@@ -16,13 +16,13 @@ def print_magic(printstr, intv=.03, end='\n'):
         time.sleep(intv)
     print('', end=end)
 
-print_magic("                    IT'S MAGIC...                        \n", 0.05)
+print_magic("                    IT'S MAGIC...                        \n", 0.03)
 print_magic("""
 ####    RetweetNetwork - Twitter Data Utility   ####
 ####           Author: Matti Remes              ####
 ####              remes@iki.fi                  ####
 ####    github.com/mremes/retweetnetwork        ####
-""", 0.005)
+""", 0.002)
 
 
 vars = [(i[0], i[1].replace('\n', '')) for i in [var.split('=') for var in open('envvars.txt').readlines()]]
@@ -137,7 +137,7 @@ def main(hashtag, count, separator, lang, filter_empty=False, output_file='resul
                          'Language of a tweet',
                          'Do you want to filter results without retweets (True/False)',
                          'Where do you want to save the CSV file?']
-            types = [str, int, str, str, bool]
+            types = [str, int, str, str, bool, str]
             for i in range(len(vars)):
                 print('{} ({}): '.format(questions[i], locals()[vars[i]]), end='')
                 answ = raw_input()
