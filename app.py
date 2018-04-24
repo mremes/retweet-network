@@ -16,13 +16,12 @@ def print_magic(printstr, intv=.03, end='\n'):
         time.sleep(intv)
     print('', end=end)
 
-print_magic("                    IT'S MAGIC...                        \n", 0.03)
 print_magic("""
 ####    RetweetNetwork - Twitter Data Utility   ####
 ####           Author: Matti Remes              ####
 ####              remes@iki.fi                  ####
 ####    github.com/mremes/retweetnetwork        ####
-""", 0.002)
+""", 0.005)
 
 
 vars = [(i[0], i[1].replace('\n', '')) for i in [var.split('=') for var in open('envvars.txt').readlines()]]
@@ -129,7 +128,6 @@ def main(hashtag, count, separator, lang, filter_empty=False, output_file='resul
         if answ not in ['n', 'y']:
             continue
         elif answ == 'n':
-            print_magic("GIMME ME SOME VALUES SO I CAN TRY TO FETCH YOU SOME TWITTER DATA")
             vars = ['hashtag', 'count', 'separator', 'lang', 'filter_empty', 'output_file']
             questions = ['Hashtag of a tweet',
                          'How many tweets',
@@ -142,7 +140,7 @@ def main(hashtag, count, separator, lang, filter_empty=False, output_file='resul
                 print('{} ({}): '.format(questions[i], locals()[vars[i]]), end='')
                 answ = raw_input()
                 if not len(answ) == 0:
-                    locals()[vars[i]] = types[i](answ)
+                    exec('{} = {}("{}")'.format(vars[i], types[i].__name__, answ))
         break
 
     print("Fetching tweets...\n")
