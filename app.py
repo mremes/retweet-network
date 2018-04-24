@@ -142,7 +142,10 @@ def main(hashtag, count, separator, lang, filter_empty=False, output_file='resul
                 print('{} ({}): '.format(questions[i], locals()[vars[i]]), end='')
                 answ = raw_input()
                 if not len(answ) == 0:
-                    exec('{} = {}("{}")'.format(vars[i], types[i].__name__, answ))
+                    if types[i] != bool:
+                        exec('{} = {}("{}")'.format(vars[i], types[i].__name__, answ))
+                    else:
+                        exec ('{} = {}("{}".lower() == "true")'.format(vars[i], types[i].__name__, answ))
         break
 
     print("Fetching tweets...\n")
