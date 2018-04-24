@@ -9,6 +9,22 @@ import sys
 import math
 
 
+def print_magic(printstr, intv=.03, end='\n'):
+    for c in printstr:
+        print(c, end='')
+        sys.stdout.flush()
+        time.sleep(intv)
+    print('', end=end)
+
+print_magic("                    IT'S MAGIC...                        \n", 0.05)
+print_magic("""
+####    RetweetNetwork - Twitter Data Utility   ####
+####           Author: Matti Remes              ####
+####              remes@iki.fi                  ####
+####    github.com/mremes/retweetnetwork        ####
+""", 0.005)
+
+
 vars = [(i[0], i[1].replace('\n', '')) for i in [var.split('=') for var in open('envvars.txt').readlines()]]
 api = twitter.Api(**dict(vars))
 
@@ -105,6 +121,29 @@ def main(hashtag, count, separator, lang, filter_empty=False, output_file='resul
                                                                                     count,
                                                                                     separator,
                                                                                     filter_empty))
+
+    while True:
+        print_magic("DO YOU WANT TO USE THESE VALUES? (Y/N)", end=' ')
+        answ = raw_input().lower()
+        print('')
+        if answ not in ['n', 'y']:
+            continue
+        elif answ == 'n':
+            print_magic("GIMME ME SOME VALUES SO I CAN TRY TO FETCH YOU SOME TWITTER DATA")
+            vars = ['hashtag', 'count', 'separator', 'lang', 'filter_empty', 'output_file']
+            questions = ['Hashtag of a tweet',
+                         'How many tweets',
+                         'How do you want to separate the data',
+                         'Language of a tweet',
+                         'Do you want to filter results without retweets (True/False)',
+                         'Where do you want to save the CSV file?']
+            types = [str, int, str, str, bool]
+            for i in range(len(vars)):
+                print('{} ({}): '.format(questions[i], locals()[vars[i]]), end='')
+                answ = raw_input()
+                if not len(answ) == 0:
+                    locals()[vars[i]] = types[i](answ)
+        break
 
     print("Fetching tweets...\n")
     tweets = get_tweets(hashtag, count, lang)
