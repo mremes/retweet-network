@@ -67,15 +67,17 @@ def get_tweets(hashtag, count, lang):
     while len(tweets) < count and cur_iter < max_iter:
         last3len[cur_iter % 3] = len(tweets)
         if len(set(last3len)) == 1:
-            print("Done.")
             break
         sys.stdout.flush()
         res = fetch_tweets(hashtag, min(count, 100), lang, max_id)
+        if len(res) == 0:
+            break
         max_id = min([t.AsDict()['id'] for t in res])
         tweets += res
         cur_iter += 1
-        sys.stdout.write("\r{} / {} tweets fetched...".format(str(len(tweets)).rjust(int(math.log10(count))), count))
+        sys.stdout.write("\r{} / {} tweets fetched... ".format(str(len(tweets)).rjust(int(math.log10(count))), count))
         time.sleep(1)
+    print("Done.")
     print('\n')
     return tweets
 
