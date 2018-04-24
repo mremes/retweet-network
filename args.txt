@@ -1,1 +1,1 @@
-valinnanvapaus 10 ; True
+sote 10 ; fi True
