@@ -19,7 +19,7 @@ After providing the credentials and installing the packages, you should be set u
 
 ## Usage
 ```
-python app.py <hashtag> <# of tweets> <separator> <language code> <filter not retweeted (True or False)>
+python app.py <hashtag> <# of tweets> <separator> <language code> <filter out not retweeted (True or False)>
 ```
 You can also put arguments into `args.txt` file (for Windows GUI user convenience).
 
