@@ -1,7 +1,7 @@
 # Social network analysis crawler
 This is a Python 2.7 CLI utility for fetching tweeter-retweeter relationships based on a hashtag. The app takes care of making the calls into necessary endpoints to construct the resulting relationships and throttling the API requests.
 
-If you have any suggestions for further development or you want to report a bug, please do [open an issue](https://github.com/mremes/retweetnetwork/issues).
+The app was developed for a one-off purpose for this one specific use case. If you have any suggestions for further development or you want to report a bug, please do [open an issue](https://github.com/mremes/retweetnetwork/issues). You can contribute by [opening a pull request](https://github.com/mremes/retweetnetwork/pulls).
 ## Prerequisites
 ### Twitter API credentials
 Twitter APIs that are used by the program need to be provided user-specific keys and secrets. These are provided to `envvars.txt` file in this format:
